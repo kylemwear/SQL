@@ -1,0 +1,816 @@
+REM *************************************** Drop Tables ************************************************
+DROP TABLE Contains;
+DROP TABLE BoardingPass;
+DROP TABLE AttFlight;
+DROP TABLE Flight;
+DROP TABLE AirSeats;
+DROP TABLE CheckedBag;
+DROP TABLE Passenger;
+DROP TABLE Pilot;
+DROP TABLE Aircraft;
+DROP TABLE Airport;
+DROP TABLE Attendant;
+
+REM *************************************** Create Tables **********************************************
+
+CREATE TABLE Attendant (
+	attendantID INTEGER NOT NULL PRIMARY KEY,
+	firstName VARCHAR(24) NOT NULL,
+	lastName VARCHAR(24) NOT NULL,
+	Email VARCHAR(40) NOT NULL,
+	phoneNum VARCHAR(12) NOT NULL);
+
+CREATE TABLE Airport (
+	airportID VARCHAR(3) NOT NULL PRIMARY KEY,
+	name VARCHAR(45) NOT NULL,
+	city VARCHAR(28) NOT NULL,
+	state VARCHAR(3) NOT NULL,
+	country VARCHAR(15) NOT NULL,
+	hub NUMBER(1) NOT NULL
+	CONSTRAINT checkbool CHECK(hub IN (1,0)));
+
+CREATE TABLE Pilot(
+	pilotID INTEGER NOT NULL PRIMARY KEY,
+	firstName VARCHAR(24) NOT NULL,
+	lastName VARCHAR(24) NOT NULL,
+	email VARCHAR(40) NOT NULL,
+	phoneNum VARCHAR(12) NOT NULL);
+
+CREATE TABLE Passenger (
+	passengerNum INTEGER NOT NULL PRIMARY KEY,
+	firstName VARCHAR(24) NOT NULL,
+	lastName VARCHAR(24) NOT NULL,
+	email VARCHAR(40) NOT NULL,
+	phoneNum VARCHAR(12) NOT NULL,
+	streetAdd VARCHAR(30) NOT NULL,
+	city VARCHAR(24) NOT NULL,
+	state VARCHAR (3) NOT NULL,
+	country VARCHAR(24) NOT NULL,
+	zip INTEGER NOT NULL);
+
+CREATE TABLE Aircraft (
+	aircraftNum INTEGER PRIMARY KEY NOT NULL,
+	type VARCHAR(25) NOT NULL);
+
+CREATE TABLE CheckedBag (
+	checkedBagID INTEGER PRIMARY KEY NOT NULL,
+	weight NUMBER(*, 2)  NOT NULL);
+
+CREATE TABLE AirSeats (
+	aircraftNum INTEGER NOT NULL REFERENCES Aircraft(aircraftNum),
+	seatID VARCHAR(3)  NOT NULL,
+	type VARCHAR(7) NOT NULL,
+	class VARCHAR(24) NOT NULL,
+	PRIMARY KEY (seatID, aircraftNum));	
+
+CREATE TABLE Flight (
+	flightNum INTEGER PRIMARY KEY NOT NULL,
+	departDateTime TIMESTAMP NOT NULL,
+	arriveDateTime TIMESTAMP NOT NULL,
+	arrivalID VARCHAR(3) NOT NULL REFERENCES Airport(airportID),
+	departureID VARCHAR(3) NOT NULL REFERENCES Airport(airportID),
+	pilotID INTEGER NOT NULL REFERENCES Pilot(pilotID),
+	copilotID INTEGER NOT NULL REFERENCES Pilot(pilotID),
+	aircraftNum INTEGER NOT NULL REFERENCES Aircraft(aircraftNum));
+
+CREATE TABLE AttFlight (
+	flightNum INTEGER NOT NULL REFERENCES Flight(flightNum),
+	attendantID INTEGER REFERENCES Attendant(attendantID),
+	PRIMARY KEY (flightNum, attendantID));
+
+CREATE TABLE BoardingPass (
+	boardingID INTEGER PRIMARY KEY NOT NULL,
+	aircraftNum INTEGER NOT NULL,
+	seatID VARCHAR(3) NOT NULL,
+FOREIGN KEY (seatID, aircraftNum) REFERENCES AirSeats(seatID, aircraftNum),  
+	passengerNum INTEGER NOT NULL REFERENCES Passenger(passengerNum),
+	flightNum INTEGER NOT NULL REFERENCES Flight(flightNum));
+
+CREATE TABLE Contains (
+	boardingID INTEGER NOT NULL REFERENCES BoardingPass(boardingID),
+	checkedBagID INTEGER REFERENCES CheckedBag(checkedBagID),
+	PRIMARY KEY (boardingID, checkedBagID));
+
+
+
+REM*****************  Populate Tables  ***********************************************
+
+INSERT INTO Attendant  VALUES (1,'Suellen','Buddleigh','sbuddleigh0@si.edu','403-640-8283');
+INSERT INTO Attendant VALUES (2,'Silvie','Torrance','storrance1@mac.com','146-196-6822');
+INSERT INTO Attendant VALUES (3,'Prescott','Raywood','praywood2@ox.ac.uk','375-457-9567');
+INSERT INTO Attendant VALUES (4,'Domini','Vigne','dvigne3@qq.com','104-826-5225');
+INSERT INTO Attendant VALUES (5,'Kay','Le Grove','klegrove4@seesaa.net','250-271-4090');
+INSERT INTO Attendant VALUES (6,'Angela','Eastope','aeastope5@sohu.com','540-372-0218');
+INSERT INTO Attendant VALUES (7,'Sheena','Wiggett','swiggett6@cafepress.com','813-292-6020');
+INSERT INTO Attendant VALUES (8,'Torre','Bruna','tbruna7@canalblog.com','453-572-7566');
+INSERT INTO Attendant VALUES (9,'Sheryl','Aitken','saitken8@dyndns.org','746-895-0824');
+INSERT INTO Attendant VALUES (10,'Pepita','Thomann','pthomann9@wisc.edu','763-421-9650');
+INSERT INTO Attendant VALUES (11,'Maurise','Cluet','mclueta@last.fm','829-409-9502');
+INSERT INTO Attendant VALUES (12,'Ethyl','Dunsire','edunsireb@flickr.com','944-184-0069');
+INSERT INTO Attendant VALUES (13,'Lorinda','Milkeham','lmilkehamc@latimes.com','969-948-4522');
+INSERT INTO Attendant VALUES (14,'Mikol','Dauber','mdauberd@creativecommons.org','244-554-9485');
+INSERT INTO Attendant VALUES (15,'Belicia','Uccello','buccelloe@exblog.jp','796-436-9440');
+INSERT INTO Attendant VALUES (16,'Chaddie','Kilminster','ckilminsterf@sciencedaily.com','628-194-6967');
+INSERT INTO Attendant VALUES (17,'Felipe','Robel','frobelg@livejournal.com','141-324-2719');
+INSERT INTO Attendant VALUES (18,'Hyman','Filintsev','hfilintsevh@cdbaby.com','317-603-5408');
+INSERT INTO Attendant VALUES (19,'Kamila','Storah','kstorahi@devhub.com','922-808-8493');
+INSERT INTO Attendant VALUES (20,'Cordie','Sterling','csterlingj@w3.org','195-734-0807');
+INSERT INTO Attendant VALUES (21,'Reeva','Yosevitz','ryosevitzk@squarespace.com','815-975-4606');
+INSERT INTO Attendant VALUES (22,'Michaela','Aronov','maronovl@pen.io','222-216-5627');
+INSERT INTO Attendant VALUES (23,'Phylis','French','pfrenchm@apache.org','243-445-0371');
+INSERT INTO Attendant VALUES (24,'Tiffany','Ducker','tduckern@t.co','312-306-1555');
+INSERT INTO Attendant VALUES (25,'Otto','Trevers','otreverso@jiathis.com','260-451-5613');
+INSERT INTO Attendant VALUES (26,'Garner','Andrus','gandrusp@ucsd.edu','797-765-6340');
+INSERT INTO Attendant VALUES (27,'Kelly','McTurlough','kmcturloughq@tripod.com','727-125-8798');
+INSERT INTO Attendant VALUES (28,'Adelbert','Wheeliker','awheelikerr@latimes.com','784-288-6408');
+INSERT INTO Attendant VALUES (29,'Devin','Kropp','dkropps@google.ca','251-682-7154');
+INSERT INTO Attendant VALUES (30,'Catriona','Lutsch','clutscht@prlog.org','424-743-8937');
+
+INSERT INTO Airport VALUES ('SIG','Fernando Luis Ribas Dominicci Airport','Newark','NJ','United States',1);
+INSERT INTO Airport VALUES ('ISU','Sulaymaniyah International Airport','Rayside-Balfour','ON','Canada',1);
+INSERT INTO Airport VALUES ('HII','Lake Havasu City Airport','Entre Rios','PR','Brazil',0);
+INSERT INTO Airport VALUES ('UIL','Quillayute Airport','Miami','FL','United States',1);
+INSERT INTO Airport VALUES ('PAC','Gamboa Airport','Alenquer','PA','Brazil',0);
+INSERT INTO Airport VALUES ('GAV','Geva Airport','Tucson','AZ','United States',0);
+INSERT INTO Airport VALUES ('TPR','Tom Price Airport','Independencia','DUR','Mexico',0);
+INSERT INTO Airport VALUES ('F23','Antlers Municipal Airport','Penalva','MA','Brazil',0);
+INSERT INTO Airport VALUES ('OMB','Omboue Hopital Airport','Plessisville','QC','Canada',0);
+INSERT INTO Airport VALUES ('FVM','Fuvahmulah Airport','Panambi','RS','Brazil',0);
+INSERT INTO Airport VALUES ('ZXA','Pupelde Airport','San Jose','CHP','Mexico',0);
+INSERT INTO Airport VALUES ('YHM','John C. Munro Hamilton International Airport','Hamilton','ON','Canada',0);
+INSERT INTO Airport VALUES ('HAW','Haverfordwest Airport','San Francisco','NAY','Mexico',0);
+INSERT INTO Airport VALUES ('GEO','Cheddi Jagan International Airport','Timehri','GUY','Brazil',0);
+INSERT INTO Airport VALUES ('AFN','Jaffrey Airport Silver Ranch Airport','Uarini','AM','Brazil',0);
+INSERT INTO Airport VALUES ('TTD','Portland Troutdale Airport','Limoeiro do Norte','CE','Brazil',1);
+INSERT INTO Airport VALUES ('LEE','Leesburg International Airport','Tucson','AZ','United States',0);
+INSERT INTO Airport VALUES ('LKL','Banak Airport','Pilar','AL','Brazil',0);
+INSERT INTO Airport VALUES ('BML','Berlin Regional Airport','Maraial','PE','Brazil',0);
+INSERT INTO Airport VALUES ('LTQ','Le Touquet-Côte d''Opale Airport','Dayton','OH','United States',1);
+INSERT INTO Airport VALUES ('RNU','Ranau Airport','Caruaru','PE','Brazil',0);
+INSERT INTO Airport VALUES ('WSP','Waspam Airport','Saint-Augustin-de-Desmaures','QC','Canada',1);
+INSERT INTO Airport VALUES ('VVI','Santa Cruz Air Force Base','Miami','FL','United States',0);
+INSERT INTO Airport VALUES ('USK','Usinsk Airport','Bom Jesus do Itabapoana','RJ','Brazil',0);
+INSERT INTO Airport VALUES ('HYC','Wycombe Air Park','High Wycombe','ENG','United Kingdom',0);
+INSERT INTO Airport VALUES ('UES','Waukesha County Airport','Clearwater','FL','United States',0);
+INSERT INTO Airport VALUES ('MPC','Muko Muko Airport','Normanton','ENG','United Kingdom',1);
+INSERT INTO Airport VALUES ('RCB','Roper Valley Airport','Lagoa do Itaenga','PE','Brazil',0);
+INSERT INTO Airport VALUES ('JDR','Juvenal Loureiro Cardoso Airport','Marialva','PR','Brazil',0);
+INSERT INTO Airport VALUES ('JSE','Sao Felix do Xingu Airport','Santa Maria','CHP','Mexico',0);
+
+INSERT INTO Pilot VALUES (1,'Hernando','Greenley','hgreenley0@berkeley.edu','211-185-4592');
+INSERT INTO Pilot VALUES (2,'Catie','Bielby','cbielby1@bluehost.com','711-941-1852');
+INSERT INTO Pilot VALUES (3,'Cris','Lukasik','clukasik2@webmd.com','214-459-0045');
+INSERT INTO Pilot VALUES (4,'Tye','Doyley','tdoyley3@samsung.com','669-290-7386');
+INSERT INTO Pilot VALUES (5,'Culver','Darkin','cdarkin4@sitemeter.com','757-877-0838');
+INSERT INTO Pilot VALUES (6,'Gianni','Robertot','grobertot5@elpais.com','882-559-7182');
+INSERT INTO Pilot VALUES (7,'Minni','Outright','moutright6@jigsy.com','677-766-4810');
+INSERT INTO Pilot VALUES (8,'Olia','Ockendon','oockendon7@mapquest.com','587-634-1137');
+INSERT INTO Pilot VALUES (9,'Mozes','Malkinson','mmalkinson8@google.fr','699-198-3075');
+INSERT INTO Pilot VALUES (10,'Gallard','Longmire','glongmire9@theatlantic.com','459-807-1239');
+INSERT INTO Pilot VALUES (11,'Rodie','Tinmouth','rtinmoutha@drupal.org','830-344-4313');
+INSERT INTO Pilot VALUES (12,'Janella','Morsom','jmorsomb@acquirethisname.com','881-317-6947');
+INSERT INTO Pilot VALUES (13,'Thomasin','Westall','twestallc@mail.ru','273-808-8615');
+INSERT INTO Pilot VALUES (14,'Izabel','Queen','iqueend@sina.com.cn','922-516-4148');
+INSERT INTO Pilot VALUES (15,'Susy','Standon','sstandone@shop-pro.jp','686-105-9623');
+INSERT INTO Pilot VALUES (16,'Jeni','Esterbrook','jesterbrookf@gnu.org','273-102-0290');
+INSERT INTO Pilot VALUES (17,'Gael','Banke','gbankeg@sogou.com','589-932-4275');
+INSERT INTO Pilot VALUES (18,'Zaneta','Richardson','zrichardsonh@zdnet.com','401-867-9659');
+INSERT INTO Pilot VALUES (19,'Ellswerth','Riguard','eriguardi@vimeo.com','540-821-9105');
+INSERT INTO Pilot VALUES (20,'Willy','Setchell','wsetchellj@tuttocitta.it','656-835-1308');
+INSERT INTO Pilot VALUES (21,'Dinny','Jepperson','djeppersonk@pbs.org','847-465-5229');
+INSERT INTO Pilot VALUES (22,'Franni','Alliston','fallistonl@samsung.com','660-236-4313');
+INSERT INTO Pilot VALUES (23,'Gabi','Oganian','goganianm@geocities.com','353-429-2974');
+INSERT INTO Pilot VALUES (24,'Anselma','Boggas','aboggasn@nytimes.com','581-880-2813');
+INSERT INTO Pilot VALUES (25,'Bobbe','Ebhardt','bebhardto@github.io','179-814-0855');
+INSERT INTO Pilot VALUES (26,'D''arcy','Rohlfs','drohlfsp@sogou.com','168-967-3464');
+INSERT INTO Pilot VALUES (27,'Chris','Mochan','cmochanq@fda.gov','268-842-6458');
+INSERT INTO Pilot VALUES (28,'Lib','Buten','lbutenr@cpanel.net','844-556-8596');
+INSERT INTO Pilot VALUES (29,'Claudelle','Scarborough','cscarboroughs@dailymotion.com','520-870-1164');
+INSERT INTO Pilot VALUES (30,'Hasheem','Bengoechea','hbengoecheat@wikipedia.org','176-327-1123');
+
+INSERT INTO Passenger VALUES (1,'Allx','Haney','ahaney0@taobao.com','255-976-2440','49 Summerview Park','Loma Bonita','OA','Mexico',52740);
+INSERT INTO Passenger VALUES (2,'Vin','McNamara','vmcnamara1@marriott.com','119-529-5117','4 Oakridge Junction','Miracema','RJ','Brazil',28460);
+INSERT INTO Passenger VALUES (3,'Kaycee','Andrassy','kandrassy2@dropbox.com','817-769-4244','6 Menomonie Plaza','Manhumirim','MG','Brazil',36970);
+INSERT INTO Passenger VALUES (4,'Brien','Malzard','bmalzard3@nytimes.com','260-569-8983','31238 Moose Point','Fort Wayne','IN','United States',46862);
+INSERT INTO Passenger VALUES (5,'Palm','Hradsky','phradsky4@cbslocal.com','176-764-3703','713 Loeprich Way','Flores da Cunha','RS','Brazil',95270);
+INSERT INTO Passenger VALUES (6,'Margarethe','Airdrie','mairdrie5@google.de','270-234-7474','7 Derek Junction','Mogi das Cruzes','SP','Brazil',69110);
+INSERT INTO Passenger VALUES (7,'Cristal','Peirce','cpeirce6@1688.com','615-427-1544','2 Haas Terrace','Nashville','TN','United States',37220);
+INSERT INTO Passenger VALUES (8,'Raeann','Stanluck','rstanluck7@washingtonpost.com','505-596-0671','0 Namekagon Road','Pontes e Lacerda',’MT’,'Brazil',78250);
+INSERT INTO Passenger VALUES (9,'Meredith','Iddy','middy8@abc.net.au','716-893-1285','1997 Morrow Trail','Murcia','MC','Spain',30005);
+INSERT INTO Passenger VALUES (10,'Falkner','Frandsen','ffrandsen9@livejournal.com','386-416-8193','0 Cherokee Lane','Schroeder','SC','Brazil',89275);
+INSERT INTO Passenger VALUES (11,'Elysia','MacCaughen','emaccaughena@canalblog.com','462-710-4546','93 Express Avenue','Santa Quiteria','CE','Brazil',62280);
+INSERT INTO Passenger VALUES (12,'Lezley','Bottom','lbottomb@rediff.com','497-202-6225','0075 Rigney Pass','Mucuri','BA','Brazil',45930);
+INSERT INTO Passenger VALUES (13,'Jill','Karpeev','jkarpeevc@nba.com','653-991-0079','0420 Briar Crest Pass','Tapes','RS','Brazil',96760);
+INSERT INTO Passenger VALUES (14,'Renaud','Druitt','rdruittd@icio.us','202-296-0855','23 Golf Course Park','Washington','DC','United States',20088);
+INSERT INTO Passenger VALUES (15,'Linc','Walter','lwaltere@imageshack.us','256-617-8459','5 Hovde Lane','Palmital','SP','Brazil',19970);
+INSERT INTO Passenger VALUES (16,'Gualterio','Loveless','glovelessf@slideshare.net','948-427-1192','910 American Drive','Feijo','AC','Brazil',69960);
+INSERT INTO Passenger VALUES (17,'Ardella','Kitching','akitchingg@networksolutions.com','640-235-1199','974 Old Shore Place','Bocaiuva','MG','Brazil',39390);
+INSERT INTO Passenger VALUES (18,'Reed','Keese','rkeeseh@topsy.com','601-161-9678','544 West Drive','Bom Jesus da Lapa','BA','Brazil',47600);
+INSERT INTO Passenger VALUES (19,'Wilbur','Wile','wwilei@va.gov','209-918-9994','05 Nobel Circle','Fresno','CA','United States',93704);
+INSERT INTO Passenger VALUES (20,'Linnell','Symondson','lsymondsonj@cnet.com','916-417-4669','59724 Burrows Street','Sacramento','CA','United States',95894);
+INSERT INTO Passenger VALUES (21,'Abram','Walkling','awalklingk@abc.net.au','194-857-6752','2 Park Meadow Alley','Breves','PA','Brazil',68800);
+INSERT INTO Passenger VALUES (22,'Ahmad','Cookson','acooksonl@hao123.com','366-883-2590','1 Ohio Plaza','Araripina','PE','Brazil',56280);
+INSERT INTO Passenger VALUES (23,'Spense','Croom','scroomm@ebay.co.uk','490-535-1168','88 Spenser Parkway','Tres Passos','RS','Brazil',98600);
+INSERT INTO Passenger VALUES (24,'Randee','Von Helmholtz','rvonhelmholtzn@opera.com','573-663-7131','638 Forster Park','Joao Camara','RN','Brazil',59550);
+INSERT INTO Passenger VALUES (25,'Andras','Sanchez','asanchezo@sciencedaily.com','310-884-0423','2808 Green Ridge Center','Los Angeles','CA','United States',90071);
+INSERT INTO Passenger VALUES (26,'Romonda','Klimkovich','rklimkovichp@hubpages.com','375-403-8870','59144 Hayes Place','Concord','VER','Mexico',95600);
+INSERT INTO Passenger VALUES (27,'Alie','De Cristoforo','adecristoforoq@prlog.org','423-828-9764','5062 Towne Plaza','Chattanooga','TN','United States',37416);
+INSERT INTO Passenger VALUES (28,'Gwenore','Beaman','gbeamanr@latimes.com','950-181-9416','29 Parkside Lane','Morada Nova','CE','Brazil',62940);
+INSERT INTO Passenger VALUES (29,'Nanete','Cescotti','ncescottis@utexas.edu','875-178-9170','424 Arapahoe Place','Chapultepec','VER','Mexico',95600);
+INSERT INTO Passenger VALUES (30,'Sharon','Creddon','screddont@google.cn','907-491-8881','3772 Warrior Way','Itapaje','CEA','Brazil',62600);
+INSERT INTO Passenger VALUES (31,'Clarance','Chesshire','cchesshire0@gov.uk','421-807-9622','99 Scoville Avenue','Eloi Mendes','MG','Brazil',37110);
+INSERT INTO Passenger VALUES (32,'Arlen','Reimer','areimer1@sciencedaily.com','488-969-5176','0991 Pawling Drive','Hidalgo','MEX','Mexico',53580);
+INSERT INTO Passenger VALUES (33,'Marlena','Vescovini','mvescovini2@smugmug.com','310-469-1029','71 Sommers Junction','Gennevilliers','IDF','France',92622);
+INSERT INTO Passenger VALUES (34,'Pollyanna','Routley','proutley3@qq.com','836-239-8551','0815 Annamark Point','Macatuba','SP','Brazil',17290);
+INSERT INTO Passenger VALUES (35,'Bay','Wyld','bwyld4@sina.com.cn','209-679-2272','1 Quincy Crossing','Stockton','CA','United States',95210);
+INSERT INTO Passenger VALUES (36,'Faunie','Leyman','fleyman5@virginia.edu','961-997-5350','1553 Shoshone Place','Morelos','MIC','Mexico',61609);
+INSERT INTO Passenger VALUES (37,'Avis','Saice','asaice6@craigslist.org','475-100-6010','79 Cottonwood Parkway','Emiliano Zapata','TAB','Mexico',92773);
+INSERT INTO Passenger VALUES (38,'Glenden','MacKey','gmackey7@baidu.com','549-512-3500','0527 Mifflin Hill','Pimenta Bueno','RO','Brazil',78984);
+INSERT INTO Passenger VALUES (39,'Udall','Eynon','ueynon8@phoca.cz','479-265-2762','698 Maple Court','Monte Alegre','PA','Brazil',59182);
+INSERT INTO Passenger VALUES (40,'Nicolais','Petrovic','npetrovic9@pcworld.com','605-427-4422','4 Saint Paul Lane','Passo Fundo','RS','Brazil',99000);
+INSERT INTO Passenger VALUES (41,'Hobey','Duffrie','hduffriea@dropbox.com','758-742-2129','47635 Bellgrove Drive','Los Pinos','MIC','Mexico',61650);
+INSERT INTO Passenger VALUES (42,'Tina','Milier','tmilierb@tripadvisor.com','774-615-8010','0028 Talisman Road','Guarapari','ES','Brazil',29200);
+INSERT INTO Passenger VALUES (43,'Shanda','Huddlestone','shuddlestonec@xinhuanet.com','533-179-0865','2836 Forest Dale Way','Belo Horizonte','MG','Brazil',30000);
+INSERT INTO Passenger VALUES (44,'Idell','Chirm','ichirmd@java.com','325-222-2708','97 Beilfuss Plaza','18 de Marzo','VER','Mexico',93294);
+INSERT INTO Passenger VALUES (45,'Chrisy','Peachman','cpeachmane@toplist.cz','527-476-8692','4890 Lakewood Parkway','Recife','PE','Brazil',50000);
+INSERT INTO Passenger VALUES (46,'Maxie','Baudacci','mbaudaccif@myspace.com','389-413-8333','73721 Crescent Oaks Place','Baume-les-Dames','BFC','France',25117);
+INSERT INTO Passenger VALUES (47,'Kellia','Dudden','kduddeng@pen.io','763-229-0300','9 Warrior Street','Paris 18','IDF','France',75884);
+INSERT INTO Passenger VALUES (48,'Dallas','Vasyushkhin','dvasyushkhinh@businesswire.com','318-538-8616','93 Florence Alley','Shreveport','LA','United States',71151);
+INSERT INTO Passenger VALUES (49,'Gerty','Goodhall','ggoodhalli@indiatimes.com','461-940-2437','600 Fieldstone Circle','Rennes','BRE','France',35033);
+INSERT INTO Passenger VALUES (50,'Grayce','Lawlance','glawlancej@storify.com','580-248-5957','35 Redwing Pass','Saint-Gregoire','BRE','France',35763);
+INSERT INTO Passenger VALUES (51,'Wiatt','Liggens','wliggensk@newsvine.com','214-710-2572','01 Calypso Park','Denton','TX','United States',76210);
+INSERT INTO Passenger VALUES (52,'Jo ann','Attlee','jattleel@naver.com','270-686-4540','61382 Sage Center','Ilha Solteira','SP','Brazil',15385);
+INSERT INTO Passenger VALUES (53,'Pavlov','Stoddard','pstoddardm@alexa.com','755-430-7642','85292 Hovde Point','Jutai','AM','Brazil',69660);
+INSERT INTO Passenger VALUES (54,'Herve','Killingbeck','hkillingbeckn@paginegialle.it','203-588-1986','7 Delaware Place','Norwalk','CA','United States',6854);
+INSERT INTO Passenger VALUES (55,'Jessy','Cashell','jcashello@yale.edu','214-114-9022','92594 Talisman Terrace','Dallas','TX','United States',75387);
+INSERT INTO Passenger VALUES (56,'Heriberto','Leyden','hleydenp@fema.gov','757-144-2254','36 Heffernan Park','Joao Pinheiro','MG','Brazil',38770);
+INSERT INTO Passenger VALUES (57,'Andriette','Darragon','adarragonq@deviantart.com','505-192-2240','2410 Hudson Park','Santa Fe','NM','United States',87592);
+INSERT INTO Passenger VALUES (58,'Bethany','Treppas','btreppasr@rediff.com','520-905-0477','6 Kingsford Street','Tucson','AZ','United States',85743);
+INSERT INTO Passenger VALUES (59,'Wally','Smiley','wsmileys@dot.gov','880-482-1449','68415 Clove Street','Itirucu','BA','Brazil',45350);
+INSERT INTO Passenger VALUES (60,'Cheslie','Higford','chigfordt@1und1.de','569-685-2117','03222 Rowland Hill','Blois','CVL','France',41015);
+INSERT INTO Passenger VALUES (61,'Kerrill','Eydel','keydelu@eventbrite.com','551-116-5413','67178 Di Loreto Hill','Emiliano Zapata','TAB','Mexico',40896);
+INSERT INTO Passenger VALUES (62,'Bentlee','Alliston','ballistonv@amazonaws.com','812-136-1910','4 Nevada Park','Itapaje','CEA','Brazil',73700);
+INSERT INTO Passenger VALUES (63,'Tobias','MacMorland','tmacmorlandw@soup.io','813-462-0110','019 Longview Way','Tampa','FL','United States',33615);
+INSERT INTO Passenger VALUES (64,'Jacques','Hamilton','jhamiltonx@pagesperso-orange.fr','532-371-9940','3 Heffernan Drive','Guadalupe','OAX','Mexico',70533);
+INSERT INTO Passenger VALUES (65,'Arin','Rahl','arahly@vk.com','978-321-9478','02012 Atwood Road','Boston','MA','United States',2283);
+INSERT INTO Passenger VALUES (66,'Gibbie','Napleton','gnapletonz@4shared.com','931-715-1705','43160 Pearson Park','5 de Mayo','VER','Mexico',93350);
+INSERT INTO Passenger VALUES (67,'Brittani','Wilcott','bwilcott10@google.co.jp','636-684-4629','1 Messerschmidt Crossing','Saint Louis','MO','United States',63131);
+INSERT INTO Passenger VALUES (68,'Wanda','Kruschev','wkruschev11@acquirethisname.com','470-532-6627','7516 Birchwood Lane','Bonneuil-sur-Marne','IDF','France',94384);
+INSERT INTO Passenger VALUES (69,'Idette','Jeremiah','ijeremiah12@ask.com','714-670-0836','10 Bobwhite Crossing','Anaheim','CA','United States',92825);
+
+INSERT INTO Aircraft VALUES (1,'Boeing 777');
+INSERT INTO Aircraft VALUES (2,'Boeing 777');
+INSERT INTO Aircraft VALUES (3,'Boeing 777');
+INSERT INTO Aircraft VALUES (4,'McDonnell Douglas DC-10');
+INSERT INTO Aircraft VALUES (5,'McDonnell Douglas DC-10');
+INSERT INTO Aircraft VALUES (6,'McDonnell Douglas DC-10');
+INSERT INTO Aircraft VALUES (7,'Boeing 757');
+INSERT INTO Aircraft VALUES (8,'McDonnell Douglas DC-10');
+INSERT INTO Aircraft VALUES (9,'McDonnell Douglas DC-10');
+INSERT INTO Aircraft VALUES (10,'Boeing 757');
+INSERT INTO Aircraft VALUES (11,'McDonnell Douglas DC-10');
+INSERT INTO Aircraft VALUES (12,'McDonnell Douglas DC-10');
+INSERT INTO Aircraft VALUES (13,'Airbus A350');
+INSERT INTO Aircraft VALUES (14,'McDonnell Douglas DC-10');
+INSERT INTO Aircraft VALUES (15,'Boeing 757');
+INSERT INTO Aircraft VALUES (16,'Boeing 777');
+INSERT INTO Aircraft VALUES (17,'Boeing 757');
+INSERT INTO Aircraft VALUES (18,'McDonnell Douglas DC-10');
+INSERT INTO Aircraft VALUES (19,'McDonnell Douglas DC-10');
+INSERT INTO Aircraft VALUES (20,'Boeing 777');
+INSERT INTO Aircraft VALUES (21,'Airbus A350');
+INSERT INTO Aircraft VALUES (22,'Boeing 757');
+INSERT INTO Aircraft VALUES (23,'Boeing 777');
+INSERT INTO Aircraft VALUES (24,'Airbus A350');
+INSERT INTO Aircraft VALUES (25,'McDonnell Douglas DC-10');
+INSERT INTO Aircraft VALUES (26,'McDonnell Douglas DC-10');
+INSERT INTO Aircraft VALUES (27,'McDonnell Douglas DC-10');
+INSERT INTO Aircraft VALUES (28,'McDonnell Douglas DC-10');
+INSERT INTO Aircraft VALUES (29,'McDonnell Douglas DC-10');
+INSERT INTO Aircraft VALUES (30,'Boeing 757');
+
+INSERT INTO CheckedBag VALUES (1,5.18);
+INSERT INTO CheckedBag VALUES (2,14.07);
+INSERT INTO CheckedBag VALUES (3,16.78);
+INSERT INTO CheckedBag VALUES (4,15.31);
+INSERT INTO CheckedBag VALUES (5,13.92);
+INSERT INTO CheckedBag VALUES (6,15.56);
+INSERT INTO CheckedBag VALUES (7,13.09);
+INSERT INTO CheckedBag VALUES (8,16.66);
+INSERT INTO CheckedBag VALUES (9,7.63);
+INSERT INTO CheckedBag VALUES (10,15.94);
+INSERT INTO CheckedBag VALUES (11,14.1);
+INSERT INTO CheckedBag VALUES (12,6.74);
+INSERT INTO CheckedBag VALUES (13,11.69);
+INSERT INTO CheckedBag VALUES (14,9.78);
+INSERT INTO CheckedBag VALUES (15,11.84);
+INSERT INTO CheckedBag VALUES (16,6.54);
+INSERT INTO CheckedBag VALUES (17,14.91);
+INSERT INTO CheckedBag VALUES (18,19.2);
+INSERT INTO CheckedBag VALUES (19,19.45);
+INSERT INTO CheckedBag VALUES (20,19.33);
+INSERT INTO CheckedBag VALUES (21,16.72);
+INSERT INTO CheckedBag VALUES (22,10.03);
+INSERT INTO CheckedBag VALUES (23,7.44);
+INSERT INTO CheckedBag VALUES (24,10.79);
+INSERT INTO CheckedBag VALUES (25,14.7);
+INSERT INTO CheckedBag VALUES (26,8.89);
+INSERT INTO CheckedBag VALUES (27,16.52);
+INSERT INTO CheckedBag VALUES (28,15.46);
+INSERT INTO CheckedBag VALUES (29,8.25);
+INSERT INTO CheckedBag VALUES (30,11.6);
+INSERT INTO CheckedBag VALUES (31,14.31);
+INSERT INTO CheckedBag VALUES (32,13.19);
+INSERT INTO CheckedBag VALUES (33,6.61);
+INSERT INTO CheckedBag VALUES (34,12.96);
+INSERT INTO CheckedBag VALUES (35,13.31);
+INSERT INTO CheckedBag VALUES (36,9.31);
+INSERT INTO CheckedBag VALUES (37,12.4);
+INSERT INTO CheckedBag VALUES (38,11);
+INSERT INTO CheckedBag VALUES (39,13.19);
+INSERT INTO CheckedBag VALUES (40,10.68);
+INSERT INTO CheckedBag VALUES (41,11.57);
+INSERT INTO CheckedBag VALUES (42,12.29);
+INSERT INTO CheckedBag VALUES (43,12.61);
+INSERT INTO CheckedBag VALUES (44,15.33);
+INSERT INTO CheckedBag VALUES (45,13.93);
+INSERT INTO CheckedBag VALUES (46,13.72);
+INSERT INTO CheckedBag VALUES (47,8.74);
+INSERT INTO CheckedBag VALUES (48,6.58);
+INSERT INTO CheckedBag VALUES (49,13.76);
+INSERT INTO CheckedBag VALUES (50,12.3);
+INSERT INTO CheckedBag VALUES (51,8.1);
+INSERT INTO CheckedBag VALUES (52,14.14);
+INSERT INTO CheckedBag VALUES (53,5.74);
+INSERT INTO CheckedBag VALUES (54,9.68);
+INSERT INTO CheckedBag VALUES (55,6.1);
+INSERT INTO CheckedBag VALUES (56,14.04);
+INSERT INTO CheckedBag VALUES (57,12.37);
+INSERT INTO CheckedBag VALUES (58,16.14);
+INSERT INTO CheckedBag VALUES (59,19.12);
+INSERT INTO CheckedBag VALUES (60,7.54);
+
+INSERT INTO AirSeats VALUES (1,'2c','aisle','first class');
+INSERT INTO AirSeats VALUES (2,'1a','window','business');
+INSERT INTO AirSeats VALUES (2,'1a','center','economy');
+INSERT INTO AirSeats VALUES (4,'1a','center','economy');
+INSERT INTO AirSeats VALUES (5,'1b','center','business');
+INSERT INTO AirSeats VALUES (6,'1b','window','first class');
+INSERT INTO AirSeats VALUES (7,'1a','window','economy');
+INSERT INTO AirSeats VALUES (1,'1a','center','first class');
+INSERT INTO AirSeats VALUES (6,'1a','center','first class');
+INSERT INTO AirSeats VALUES (10,'1c','window','economy');
+INSERT INTO AirSeats VALUES (11,'2a','window','business');
+INSERT INTO AirSeats VALUES (12,'2a','window','economy');
+INSERT INTO AirSeats VALUES (13,'2b','aisle','economy');
+INSERT INTO AirSeats VALUES (6, '2b','window','first class');
+INSERT INTO AirSeats VALUES (15,'2c','center','business');
+INSERT INTO AirSeats VALUES (16,'2a','window','first class');
+INSERT INTO AirSeats VALUES (17,'3a','aisle','business');
+INSERT INTO AirSeats VALUES (18,'3b','center','business');
+INSERT INTO AirSeats VALUES (19,'3c','center','business');
+INSERT INTO AirSeats VALUES (20,'4a','center','economy');
+INSERT INTO AirSeats VALUES (21,'4c','window','first class');
+INSERT INTO AirSeats VALUES (22,'4b','center','first class');
+INSERT INTO AirSeats VALUES (23,'4a','window','economy');
+INSERT INTO AirSeats VALUES (24,'4a','window','business');
+INSERT INTO AirSeats VALUES (25,'4b','aisle','business');
+INSERT INTO AirSeats VALUES (26,'4c','window','business');
+INSERT INTO AirSeats VALUES (1,'5c','window','first class');
+INSERT INTO AirSeats VALUES (28,'5c','center','first class');
+INSERT INTO AirSeats VALUES (29,'5a','center','economy');
+INSERT INTO AirSeats VALUES (30,'5a','center','business');
+INSERT INTO AirSeats VALUES (1,'5b','window','business');
+INSERT INTO AirSeats VALUES (2,'5b','aisle','economy');
+INSERT INTO AirSeats VALUES (3,'5b','center','economy');
+INSERT INTO AirSeats VALUES (4,'6c','aisle','first class');
+INSERT INTO AirSeats VALUES (5,'6c','aisle','economy');
+INSERT INTO AirSeats VALUES (6,'6b','window','first class');
+INSERT INTO AirSeats VALUES (7,'6b','window','business');
+INSERT INTO AirSeats VALUES (8,'6c','center','economy');
+INSERT INTO AirSeats VALUES (9,'6a','center','economy');
+INSERT INTO AirSeats VALUES (10,'7a','window','economy');
+INSERT INTO AirSeats VALUES (11,'7c','aisle','business');
+INSERT INTO AirSeats VALUES (12,'7a','aisle','business');
+INSERT INTO AirSeats VALUES (13,'7b','window','economy');
+INSERT INTO AirSeats VALUES (14,'7b','window','business');
+INSERT INTO AirSeats VALUES (15,'7c','center','economy');
+INSERT INTO AirSeats VALUES (16,'8c','window','business');
+INSERT INTO AirSeats VALUES (17,'8a','aisle','economy');
+INSERT INTO AirSeats VALUES (1,'8b','center','first class');
+INSERT INTO AirSeats VALUES (19,'8c','center','first class');
+INSERT INTO AirSeats VALUES (20,'8b','aisle','first class');
+INSERT INTO AirSeats VALUES (21,'9c','window','first class');
+INSERT INTO AirSeats VALUES (22,'9b','center','first class');
+INSERT INTO AirSeats VALUES (23,'9a','window','business');
+INSERT INTO AirSeats VALUES (24,'9b','center','business');
+INSERT INTO AirSeats VALUES (25,'9c','aisle','business');
+INSERT INTO AirSeats VALUES (26,'10a','center','economy');
+INSERT INTO AirSeats VALUES (27,'10a','window','economy');
+INSERT INTO AirSeats VALUES (28,'10b','aisle','first class');
+INSERT INTO AirSeats VALUES (29,'10a','center','economy');
+INSERT INTO AirSeats VALUES (30,'10c','window','first class');
+
+INSERT INTO Flight VALUES (1,'29-Apr-23 4.24.00 PM','29-Apr-23 9.24.00 PM','SIG','AFN',2,29,1);
+INSERT INTO Flight VALUES (2,'30-Apr-23 12.26.00 PM','30-Apr-23 5.26.00 PM','ISU','BML',2,29,2);
+INSERT INTO Flight VALUES (3,'30-Apr-23 3.51.00 PM','30-Apr-23 9.51.00 PM','HII','F23',2,29,2);
+INSERT INTO Flight VALUES (4,'29-Apr-23 04.21.00 AM','29-Apr-23 09.21.00 AM','UIL','FVM',2,29,4);
+INSERT INTO Flight VALUES (5,'29-Apr-23 11.46.00 AM','29-Apr-23 5.46.00 PM','PAC','GAV',2,29,5);
+INSERT INTO Flight VALUES (6,'29-Apr-23 1.43.00 PM','29-Apr-23 5.43.00 PM','GAV','GEO',5,6,6);
+INSERT INTO Flight VALUES (7,'29-Apr-23 04.17.00 PM','29-Apr-23 09.17.00 PM','TPR','HAW',7,8,7);
+INSERT INTO Flight VALUES (8,'30-Apr-23 5.53.00 PM','30-Apr-23 10.53.00 PM','F23','HII',8,9,8);
+INSERT INTO Flight VALUES (9,'30-Apr-23 7.48.00 PM','01-May-23 12.48.00 AM','OMB','HYC',9,10,9);
+INSERT INTO Flight VALUES (10,'29-Apr-23 12.26.00 AM','29-Apr-23 05.26.00 AM','FVM','ISU',10,11,10);
+INSERT INTO Flight VALUES (11,'30-Apr-23 1.20.00 PM','30-Apr-23 8.20.00 PM','ZXA','JDR',11,12,11);
+INSERT INTO Flight VALUES (12,'29-Apr-23 12.14.00 PM','29-Apr-23 5.14.00 PM','YHM','JSE',12,13,12);
+INSERT INTO Flight VALUES (13,'29-Apr-23 2.29.00 PM','29-Apr-23 7.29.00 PM','HAW','LEE',13,14,13);
+INSERT INTO Flight VALUES (14,'29-Apr-23 05.22.00 AM','29-Apr-23 10.22.00 AM','GEO','LKL',14,15,14);
+INSERT INTO Flight VALUES (15,'29-Apr-23 11.35.00 AM','29-Apr-23 5.35.00 PM','AFN','LTQ',15,16,15);
+INSERT INTO Flight VALUES (16,'30-Apr-23 12.55.00 AM','30-Apr-23 05.55.00 AM','TTD','MPC',15,16,16);
+INSERT INTO Flight VALUES (17,'29-Apr-23 04.14.00 AM','29-Apr-23 09.14.00 AM','LEE','OMB',17,18,17);
+INSERT INTO Flight VALUES (18,'30-Apr-23 12.20.00 PM','30-Apr-23 5.20.00 PM','LKL','PAC',18,19,18);
+INSERT INTO Flight VALUES (19,'30-Apr-23 01.20.00 AM','30-Apr-23 06.20.00 AM','BML','RCB',19,20,19);
+INSERT INTO Flight VALUES (20,'29-Apr-23 12.08.00 PM','29-Apr-23 5.08.00 PM','LTQ','RNU',20,21,20);
+INSERT INTO Flight VALUES (21,'29-Apr-23 12.24.00 AM','29-Apr-23 05.24.00 AM','RNU','TPR',21,22,21);
+INSERT INTO Flight VALUES (22,'30-Apr-23 04.15.00 AM','30-Apr-23 09.15.00 AM','WSP','TTD',22,23,22);
+INSERT INTO Flight VALUES (23,'29-Apr-23 11.22.00 AM','29-Apr-23 5.22.00 PM','VVI','UES',23,24,23);
+INSERT INTO Flight VALUES (24,'29-Apr-23 10.21.00 AM','29-Apr-23 3.21.00 PM','USK','UIL',24,25,24);
+INSERT INTO Flight VALUES (25,'30-Apr-23 09.43.00 AM','30-Apr-23 2.43.00 PM','HYC','USK',25,26,25);
+INSERT INTO Flight VALUES (26,'30-Apr-23 11.33.00 PM','01-May-23 06.33.00 AM','UES','VVI',26,27,26);
+INSERT INTO Flight VALUES (27,'29-Apr-23 10.34.00 PM','30-Apr-23 03.34.00 AM','MPC','WSP',26,27,27);
+INSERT INTO Flight VALUES (28,'30-Apr-23 11.24.00 PM','01-May-23 06.24.33 AM','RCB','YHM',28,29,28);
+INSERT INTO Flight VALUES (29,'29-Apr-23 3.39.00 PM','29-Apr-23 8.39.00 PM','JDR','ZXA',23,29,29);
+INSERT INTO Flight VALUES (30,'29-Apr-23 5.42.00 PM','29-Apr-23 10.42.00 PM','JSE','SIG',1,30,30);
+INSERT INTO Flight VALUES (31,'30-Apr-23 02.59.00 AM','30-Apr-23 07.59.00 AM','JSE','BML',14,17,1);
+INSERT INTO Flight VALUES (32,'30-Apr-23 12.59.00 AM','30-Apr-23 05.59.00 AM','ISU','BML',14,17,2);
+INSERT INTO Flight VALUES (33,'30-Apr-23 12.39.00 AM','30-Apr-23 05.39.00 AM','HII','F23',14,17,3);
+INSERT INTO Flight VALUES (34,'29-Apr-23 8.40.00 AM','29-Apr-23 11.40.00 PM','UIL','FVM',14,17,4);
+INSERT INTO Flight VALUES (35,'29-Apr-23 12.33.00 PM','29-Apr-23 6.33.00 PM','PAC','GAV',14,17,5);
+INSERT INTO Flight VALUES (36,'30-Apr-23 5.30.00 PM','30-Apr-23 10.30.00 PM','GAV','GEO',13,18,6);
+INSERT INTO Flight VALUES (37,'29-Apr-23 11.16.00 AM','29-Apr-23 4.16.00 PM','TPR','HAW',12,19,7);
+INSERT INTO Flight VALUES (38,'30-Apr-23 1.41.00 PM','30-Apr-23 6.41.00 PM','F23','HII',12,19,8);
+INSERT INTO Flight VALUES (39,'29-Apr-23 12.17.00 PM','29-Apr-23 4.17.00 PM','OMB','HYC',11,20,9);
+INSERT INTO Flight VALUES (40,'30-Apr-23 10.44.00 PM','01-May-23 04.33.44 AM','FVM','ISU',11,20,10);
+INSERT INTO Flight VALUES (41,'29-Apr-23 10.44.00 AM','29-Apr-23 3.44.00 PM','ZXA','JDR',10,21,11);
+INSERT INTO Flight VALUES (42,'30-Apr-23 05.21.00 AM','30-Apr-23 10.21.00 AM','YHM','JSE',10,21,12);
+INSERT INTO Flight VALUES (43,'29-Apr-23 3.19.00 PM','29-Apr-23 8.19.00 PM','HAW','LEE',9,22,13);
+INSERT INTO Flight VALUES (44,'29-Apr-23 10.54.00 PM','30-Apr-23 03.54.00 AM','GEO','LKL',9,22,14);
+INSERT INTO Flight VALUES (45,'29-Apr-23 08.01.00 AM','29-Apr-23 1.01.00 PM','AFN','LTQ',8,23,15);
+INSERT INTO Flight VALUES (46,'29-Apr-23 12.20.00 AM','29-Apr-23 05.20.00 AM','TTD','MPC',8,23,16);
+INSERT INTO Flight VALUES (47,'29-Apr-23 7.56.00 PM','30-Apr-23 12.56.00 AM','LEE','OMB',8,23,15);
+INSERT INTO Flight VALUES (48,'30-Apr-23 08.29.00 AM','30-Apr-23 1.29.00 PM','LKL','PAC',5,24,18);
+INSERT INTO Flight VALUES (49,'29-Apr-23 10.04.00 AM','29-Apr-23 4.04.00 PM','BML','RCB',5,24,19);
+INSERT INTO Flight VALUES (50,'29-Apr-23 02.14.00 AM','29-Apr-23 07.14.00 AM','LTQ','RNU',5,24,20);
+INSERT INTO Flight VALUES (51,'30-Apr-23 12.54.00 AM','30-Apr-23 05.54.00 AM','RNU','TPR',5,24,21);
+INSERT INTO Flight VALUES (52,'29-Apr-23 11.08.00 AM','29-Apr-23 4.08.00 PM','WSP','TTD',5,24,22);
+INSERT INTO Flight VALUES (53,'30-Apr-23 6.33.00 PM','30-Apr-23 11.33.00 PM','VVI','UES',5,24,23);
+INSERT INTO Flight VALUES (54,'30-Apr-23 11.03.00 AM','30-Apr-23 4.03.00 PM','USK','UIL',5,24,23);
+INSERT INTO Flight VALUES (55,'29-Apr-23 11.03.00 PM','30-Apr-23 05.03.00 AM','HYC','USK',5,24,25);
+INSERT INTO Flight VALUES (56,'29-Apr-23 10.48.00 PM','30-Apr-23 05.44.00 AM','UES','VVI',5,24,26);
+INSERT INTO Flight VALUES (57,'29-Apr-23 11.28.00 PM','30-Apr-23 05.28.00 AM','MPC','WSP',5,24,27);
+INSERT INTO Flight VALUES (58,'29-Apr-23 10.50.00 PM','30-Apr-23 03.50.00 AM','RCB','YHM',6,25,28);
+INSERT INTO Flight VALUES (59,'30-Apr-23 12.15.00 AM','30-Apr-23 05.00.00 AM','JDR','ZXA',6,25,29);
+INSERT INTO Flight VALUES (60,'29-Apr-23 9.09.00 PM','30-Apr-23 02.09.00 AM','JSE','SIG',6,25,30);
+
+INSERT INTO Flight VALUES (61,'29-Apr-23 12.20.00 PM','29-Apr-23 5.20.00 PM','HII','LKL',5,26,12);
+INSERT INTO Flight VALUES (62,'29-Apr-23 1.20.00 AM','1-May-23 4.33.44 AM','HII','LTQ',5,26,13);
+INSERT INTO Flight VALUES (63,'29-Apr-23 12.08.00 PM','29-Apr-23 5.08.00 PM','HII','MPC',5,26,14);
+INSERT INTO Flight VALUES (64,'30-Apr-23 0.24.00 AM','30-Apr-23 5.24.00 AM','HII','OMB',5,26,15);
+INSERT INTO Flight VALUES (65,'29-Apr-23 4.15.00 AM','29-Apr-23 9.15.00 AM','HII','PAC',4,27,16);
+INSERT INTO Flight VALUES (66,'29-Apr-23 11.22.00 AM','30-Apr-23 3.54.00 AM','HII','RCB',4,27,15);
+INSERT INTO Flight VALUES (67,'30-Apr-23 10.21.00 AM','30-Apr-23 3.21.00 PM','FVM','RNU',3,28,18);
+INSERT INTO Flight VALUES (68,'29-Apr-23 9.43.00 AM','29-Apr-23 2.43.00 PM','FVM','TPR',3,28,19);
+INSERT INTO Flight VALUES (69,'30-Apr-23 7.33.00 PM','1-Mayr-23 0.56.00 AM','FVM','TTD',3,28,20);
+INSERT INTO Flight VALUES (70,'30-Apr-23 0.39.00 AM','30-Apr-23 5.39.00 AM','FVM','UES',3,28,21);
+INSERT INTO Flight VALUES (71,'29-Apr-23 6.40.00 PM','29-Apr-23 11.40.00 PM','FVM','UIL',3,28,22);
+INSERT INTO Flight VALUES (72,'29-Apr-23 12.33.00 PM','29-Apr-23 5.33.00 PM','FVM','USK',3,28,23);
+INSERT INTO Flight VALUES (73,'29-Apr-23 5.30.00 PM','29-Apr-23 10.30.00 PM','FVM','VVI',3,28,23);
+INSERT INTO Flight VALUES (74,'29-Apr-23 11.16.00 AM','29-Apr-23 4.16.00 PM','FVM','WSP',3,28,25);
+INSERT INTO Flight VALUES (75,'30-Apr-23 1.41.00 PM','30-Apr-23 6.41.00 PM','RCB','YHM',1,30,26);
+INSERT INTO Flight VALUES (76,'29-Apr-23 12.17.00 PM','29-Apr-23 5.17.00 PM','RCB','ZXA',1,30,27);
+INSERT INTO Flight VALUES (77,'29-Apr-23 10.21.00 AM','30-Apr-23 5.03.00 AM','RCB','SIG',1,30,28);
+INSERT INTO Flight VALUES (78,'30-Apr-23 5.43.00 AM','30-Apr-23 9.44.00 AM','RCB','SIG',1,30,29);
+INSERT INTO Flight VALUES (79,'29-Apr-23 11.33.00 PM','30-Apr-23 5.28.00 AM','RCB','SIG',1,30,30);
+
+
+INSERT INTO AttFlight VALUES (1,1);
+INSERT INTO AttFlight VALUES (2,1);
+INSERT INTO AttFlight VALUES (3,3);
+INSERT INTO AttFlight VALUES (4,4);
+INSERT INTO AttFlight VALUES (5,5);
+INSERT INTO AttFlight VALUES (6,6);
+INSERT INTO AttFlight VALUES (7,7);
+INSERT INTO AttFlight VALUES (8,8);
+INSERT INTO AttFlight VALUES (9,9);
+INSERT INTO AttFlight VALUES (10,10);
+INSERT INTO AttFlight VALUES (11,11);
+INSERT INTO AttFlight VALUES (12,12);
+INSERT INTO AttFlight VALUES (13,13);
+INSERT INTO AttFlight VALUES (14,14);
+INSERT INTO AttFlight VALUES (15,15);
+INSERT INTO AttFlight VALUES (16,16);
+INSERT INTO AttFlight VALUES (17,17);
+INSERT INTO AttFlight VALUES (18,18);
+INSERT INTO AttFlight VALUES (19,19);
+INSERT INTO AttFlight VALUES (20,20);
+INSERT INTO AttFlight VALUES (21,21);
+INSERT INTO AttFlight VALUES (22,22);
+INSERT INTO AttFlight VALUES (23,23);
+INSERT INTO AttFlight VALUES (24,24);
+INSERT INTO AttFlight VALUES (25,25);
+INSERT INTO AttFlight VALUES (26,26);
+INSERT INTO AttFlight VALUES (27,27);
+INSERT INTO AttFlight VALUES (28,28);
+INSERT INTO AttFlight VALUES (29,29);
+INSERT INTO AttFlight VALUES (30,30);
+INSERT INTO AttFlight VALUES (31,1);
+INSERT INTO AttFlight VALUES (32,1);
+INSERT INTO AttFlight VALUES (33,3);
+INSERT INTO AttFlight VALUES (34,4);
+INSERT INTO AttFlight VALUES (35,5);
+INSERT INTO AttFlight VALUES (36,6);
+INSERT INTO AttFlight VALUES (37,7);
+INSERT INTO AttFlight VALUES (38,8);
+INSERT INTO AttFlight VALUES (39,9);
+INSERT INTO AttFlight VALUES (40,10);
+INSERT INTO AttFlight VALUES (41,10);
+INSERT INTO AttFlight VALUES (42,10);
+INSERT INTO AttFlight VALUES (43,13);
+INSERT INTO AttFlight VALUES (44,14);
+INSERT INTO AttFlight VALUES (45,15);
+INSERT INTO AttFlight VALUES (46,15);
+INSERT INTO AttFlight VALUES (47,17);
+INSERT INTO AttFlight VALUES (48,18);
+INSERT INTO AttFlight VALUES (49,19);
+INSERT INTO AttFlight VALUES (50,20);
+INSERT INTO AttFlight VALUES (51,21);
+INSERT INTO AttFlight VALUES (52,22);
+INSERT INTO AttFlight VALUES (53,23);
+INSERT INTO AttFlight VALUES (54,24);
+INSERT INTO AttFlight VALUES (55,25);
+INSERT INTO AttFlight VALUES (56,25);
+INSERT INTO AttFlight VALUES (57,27);
+INSERT INTO AttFlight VALUES (58,28);
+INSERT INTO AttFlight VALUES (59,29);
+INSERT INTO AttFlight VALUES (60,30);
+
+INSERT INTO BoardingPass VALUES (1,1,'2c',1,1);
+INSERT INTO BoardingPass VALUES (2,2,'1a',2,2);
+INSERT INTO BoardingPass VALUES (3,3,'1a',3,3);
+INSERT INTO BoardingPass VALUES (4,4,'1a',4,4);
+INSERT INTO BoardingPass VALUES (5,5,'1b',5,5);
+INSERT INTO BoardingPass VALUES (6,6,'1b',6,6);
+INSERT INTO BoardingPass VALUES (7,7,'1a',7,7);
+INSERT INTO BoardingPass VALUES (8,8,'1a',8,8);
+INSERT INTO BoardingPass VALUES (9,9,'1a',9,9);
+INSERT INTO BoardingPass VALUES (10,10,'1c',10,10);
+INSERT INTO BoardingPass VALUES (11,11,'2a',11,11);
+INSERT INTO BoardingPass VALUES (12,12,'2a',12,12);
+INSERT INTO BoardingPass VALUES (13,13,'2b',13,13);
+INSERT INTO BoardingPass VALUES (14,14,'2b',14,14);
+INSERT INTO BoardingPass VALUES (15,15,'2c',15,15);
+INSERT INTO BoardingPass VALUES (16,16,'2a',16,16);
+INSERT INTO BoardingPass VALUES (17,17,'3a',17,17);
+INSERT INTO BoardingPass VALUES (18,18,'3b',18,18);
+INSERT INTO BoardingPass VALUES (19,19,'3c',19,19);
+INSERT INTO BoardingPass VALUES (20,20,'4a',20,20);
+INSERT INTO BoardingPass VALUES (21,21,'4c',21,21);
+INSERT INTO BoardingPass VALUES (22,22,'4b',22,22);
+INSERT INTO BoardingPass VALUES (23,23,'4a',23,23);
+INSERT INTO BoardingPass VALUES (24,24,'4a',24,24);
+INSERT INTO BoardingPass VALUES (25,25,'4b',25,25);
+INSERT INTO BoardingPass VALUES (26,26,'4c',26,26);
+INSERT INTO BoardingPass VALUES (27,27,'5c',27,27);
+INSERT INTO BoardingPass VALUES (28,28,'5c',28,28);
+INSERT INTO BoardingPass VALUES (29,29,'5a',29,29);
+INSERT INTO BoardingPass VALUES (30,30,'5a',30,30);
+INSERT INTO BoardingPass VALUES (31,1,'5b',31,31);
+INSERT INTO BoardingPass VALUES (32,2,'5b',32,32);
+INSERT INTO BoardingPass VALUES (33,3,'5b',33,33);
+INSERT INTO BoardingPass VALUES (34,4,'6c',34,34);
+INSERT INTO BoardingPass VALUES (35,5,'6c',35,35);
+INSERT INTO BoardingPass VALUES (36,6,'6b',36,36);
+INSERT INTO BoardingPass VALUES (37,7,'6b',37,37);
+INSERT INTO BoardingPass VALUES (38,8,'6c',38,38);
+INSERT INTO BoardingPass VALUES (39,9,'6a',39,39);
+INSERT INTO BoardingPass VALUES (40,10,'7a',40,40);
+INSERT INTO BoardingPass VALUES (41,11,'7c',41,41);
+INSERT INTO BoardingPass VALUES (42,12,'7a',42,42);
+INSERT INTO BoardingPass VALUES (43,13,'7b',43,43);
+INSERT INTO BoardingPass VALUES (44,14,'7b',44,44);
+INSERT INTO BoardingPass VALUES (45,15,'7c',45,45);
+INSERT INTO BoardingPass VALUES (46,16,'8c',46,46);
+INSERT INTO BoardingPass VALUES (47,17,'8a',47,47);
+INSERT INTO BoardingPass VALUES (48,18,'8b',48,48);
+INSERT INTO BoardingPass VALUES (49,19,'8c',49,49);
+INSERT INTO BoardingPass VALUES (50,20,'8b',50,50);
+INSERT INTO BoardingPass VALUES (51,21,'9c',51,51);
+INSERT INTO BoardingPass VALUES (52,22,'9b',52,52);
+INSERT INTO BoardingPass VALUES (53,23,'9a',53,53);
+INSERT INTO BoardingPass VALUES (54,24,'9b',54,54);
+INSERT INTO BoardingPass VALUES (55,25,'9c',55,55);
+INSERT INTO BoardingPass VALUES (56,26,'10a',56,56);
+INSERT INTO BoardingPass VALUES (57,27,'10a',57,57);
+INSERT INTO BoardingPass VALUES (58,28,'10b',58,58);
+INSERT INTO BoardingPass VALUES (59,29,'10a',59,59);
+INSERT INTO BoardingPass VALUES (60,30,'10c',60,60);
+INSERT INTO BoardingPass VALUES (61,30,'10c',61,60);
+INSERT INTO BoardingPass VALUES (62,30,'10c',62,60);
+INSERT INTO BoardingPass VALUES (63,30,'10c',63,60);
+INSERT INTO BoardingPass VALUES (64,30,'10c',64,60);
+INSERT INTO BoardingPass VALUES (65,30,'10c',65,60);
+INSERT INTO BoardingPass VALUES (66,30,'10c',66,60);
+INSERT INTO BoardingPass VALUES (67,30,'10c',67,60);
+INSERT INTO BoardingPass VALUES (68,30,'10c',68,60);
+INSERT INTO BoardingPass VALUES (69,30,'10c',69,60);
+INSERT INTO BoardingPass VALUES (70,30,'10c',69,60);
+
+INSERT INTO Contains VALUES (1,1);
+INSERT INTO Contains VALUES (2,2);
+INSERT INTO Contains VALUES (3,3);
+INSERT INTO Contains VALUES (4,4);
+INSERT INTO Contains VALUES (5,5);
+INSERT INTO Contains VALUES (6,6);
+INSERT INTO Contains VALUES (7,7);
+INSERT INTO Contains VALUES (8,8);
+INSERT INTO Contains VALUES (9,9);
+INSERT INTO Contains VALUES (10,10);
+INSERT INTO Contains VALUES (11,11);
+INSERT INTO Contains VALUES (12,12);
+INSERT INTO Contains VALUES (13,13);
+INSERT INTO Contains VALUES (14,14);
+INSERT INTO Contains VALUES (15,15);
+INSERT INTO Contains VALUES (16,16);
+INSERT INTO Contains VALUES (17,17);
+INSERT INTO Contains VALUES (18,18);
+INSERT INTO Contains VALUES (19,19);
+INSERT INTO Contains VALUES (20,20);
+INSERT INTO Contains VALUES (21,21);
+INSERT INTO Contains VALUES (22,22);
+INSERT INTO Contains VALUES (23,23);
+INSERT INTO Contains VALUES (24,24);
+INSERT INTO Contains VALUES (25,25);
+INSERT INTO Contains VALUES (26,26);
+INSERT INTO Contains VALUES (27,27);
+INSERT INTO Contains VALUES (28,28);
+INSERT INTO Contains VALUES (29,29);
+INSERT INTO Contains VALUES (30,30);
+INSERT INTO Contains VALUES (31,31);
+INSERT INTO Contains VALUES (32,32);
+INSERT INTO Contains VALUES (33,33);
+INSERT INTO Contains VALUES (34,34);
+INSERT INTO Contains VALUES (35,35);
+INSERT INTO Contains VALUES (36,36);
+INSERT INTO Contains VALUES (37,37);
+INSERT INTO Contains VALUES (38,38);
+INSERT INTO Contains VALUES (39,39);
+INSERT INTO Contains VALUES (40,40);
+INSERT INTO Contains VALUES (41,41);
+INSERT INTO Contains VALUES (42,42);
+INSERT INTO Contains VALUES (43,43);
+INSERT INTO Contains VALUES (44,44);
+INSERT INTO Contains VALUES (45,45);
+INSERT INTO Contains VALUES (46,46);
+INSERT INTO Contains VALUES (47,47);
+INSERT INTO Contains VALUES (48,48);
+INSERT INTO Contains VALUES (49,49);
+INSERT INTO Contains VALUES (50,50);
+INSERT INTO Contains VALUES (51,51);
+INSERT INTO Contains VALUES (52,52);
+INSERT INTO Contains VALUES (53,53);
+INSERT INTO Contains VALUES (54,54);
+INSERT INTO Contains VALUES (55,55);
+INSERT INTO Contains VALUES (56,56);
+INSERT INTO Contains VALUES (57,57);
+INSERT INTO Contains VALUES (58,58);
+INSERT INTO Contains VALUES (69,59);
+INSERT INTO Contains VALUES (69,60);
+
+REM *************************************** Format Output **********************************************
+SET LINESIZE 300
+SET PAGESIZE 100
+SET WRAP ON
+
+/*****************************************************************************************
+*** QUERY 1(S1) - Simple Join: Counts the number of first class seats on any given     ***  
+***  aircraft apart Crash Airlines                                                     ***
+*****************************************************************************************/
+SELECT aircraftNum Aircraft, COUNT(seatID) Number_Of_Firstclass_Seats
+FROM AirSeats
+WHERE UPPER(class) = 'FIRST CLASS'
+GROUP BY aircraftNum
+ORDER BY Number_Of_Firstclass_Seats DESC, Aircraft;
+
+/*****************************************************************************************
+*** QUERY 2(J2) - Join using 2 Tables: Lists Airports with more than 5 departing       ***
+*** flights                                                                            ***
+*****************************************************************************************/
+COLUMN Airport FORMAT A7
+
+SELECT AP.airportID Airport, AP.country, AP.city, COUNT(F.flightNum) Num_Flights
+FROM Airport AP, Flight F
+WHERE AP.airportID = F.arrivalID
+HAVING COUNT(F.flightNum) > 5
+GROUP BY AP.airportID, AP.country, AP.city
+ORDER BY Num_Flights DESC;
+
+/*****************************************************************************************
+*** QUERY 3(J2) - Join using 2 Tables: Lists pilots and copilots who have flown        ***
+*** together 5 or more times                                                           ***
+*****************************************************************************************/
+SELECT P.pilotID Pilot_ID, F.copilotID Copilot_ID, COUNT(F.flightNum) Times_Partnered
+FROM Pilot P, Flight F
+WHERE F.pilotID = P.pilotID
+HAVING COUNT(F.flightNum) >= 5
+GROUP BY P.pilotID, F.copilotID
+ORDER BY Times_Partnered DESC;
+
+/*****************************************************************************************
+*** QUERY 4(J3) - Join using 3 or more Tables: Lists the passengers flying out of the  ***
+*** United States with bag weights heavier than 10lbs                                  ***              			         
+*****************************************************************************************/
+SELECT (P.firstName || ' ' ||  P.lastName) Passenger_Name, CB.weight Bag_Weight
+FROM Passenger P, BoardingPass BP, Contains C, CheckedBag CB
+WHERE UPPER(P.country) = 'UNITED STATES' AND CB.weight > 10 
+AND P.passengerNum = BP.passengerNum AND BP.boardingID = C.boardingID 
+AND C.checkedBagID = CB.checkedBagID
+ORDER BY CB.weight DESC;
+
+/*****************************************************************************************
+*** QUERY 5(J3) - Join using 3 or more Tables: Associates a pilot with an aircraft     ***
+*** and shows the number of times that particular pilot has flown that aircraft        ***
+*****************************************************************************************/
+SELECT P.lastName, AC.type, COUNT(F.flightNum) Num_Flights
+FROM Pilot P, Aircraft AC, Flight F
+WHERE P.pilotID = F.pilotID AND F.aircraftNum = AC.aircraftNum
+HAVING COUNT(F.flightNum) > 2
+GROUP BY P.lastName, AC.type
+ORDER BY Num_Flights DESC, AC.type;
+
+/*****************************************************************************************
+*** QUERY 6(OJ) – Outer Join: Lists the attendants that have not participated in any   ***
+*** flights                                                                            ***
+*****************************************************************************************/
+SELECT A.attendantID, (A.firstName || ' ' || A.lastName) Attendant_Name
+FROM Attendant A, AttFlight AF
+WHERE A.attendantID = AF.attendantID(+)
+HAVING COUNT(flightNum) = 0
+GROUP BY A.attendantID, A.firstName, A.lastName;
+
+/*****************************************************************************************
+*** QUERY 7(SUB) - Normal Subquery: Shows boarding passes that are associated with     ***
+*** people flying in business class seats                                              ***
+*****************************************************************************************/
+SELECT COUNT(boardingID) Business_Boarding_Passes
+FROM BoardingPass
+WHERE (seatID,aircraftNum) IN
+	(SELECT seatID, aircraftNum
+	 FROM AirSeats
+	 WHERE UPPER(class) LIKE 'B%')
+ORDER BY Business_Boarding_Passes;
+
+/*****************************************************************************************
+*** QUERY 8(NEST) – Nested Subquery: finds passengers riding first class aisle and     ***
+*** center seats                                                                       ***
+*****************************************************************************************/
+SELECT passengerNum passengerID, (firstName || ' ' ||  lastName) 
+Riding_First_Class_Aisle_Seats
+FROM Passenger
+WHERE passengerNum IN
+	(SELECT passengerNum
+ 	 FROM BoardingPass
+ 	 WHERE seatID IN
+		  (SELECT seatID
+		   FROM AirSeats
+		   WHERE UPPER(class) LIKE 'F%' AND (UPPER(type) LIKE 'A%' 
+		   OR UPPER(type) LIKE 'C%' )))
+ORDER BY passengerID;
+
+
+/*****************************************************************************************
+*** QUERY 9(CSUB) – Correlated Subquery: Shows the number passengers that are flying   ***
+*** from each country                                                                  ***
+*****************************************************************************************/
+SELECT country, COUNT(*) AS Num_Passengers_Flying
+FROM Passenger P1
+WHERE EXISTS 
+    (SELECT *
+     FROM Passenger P2
+     WHERE P1.country = P2.country AND P1.passengerNum != P2.passengerNum)
+GROUP BY country
+ORDER BY Num_Passengers_Flying DESC;
+
+
+/*****************************************************************************************
+*** QUERY 10(ASUB) - Alternative Subquery Structure: Lists the Maximum number of       ***
+*** passengers from a country                                                          ***
+*****************************************************************************************/
+SELECT Country, Number_Of_Passengers Max_Num_Passengers
+FROM
+    (SELECT country Country, COUNT(passengerNum) Number_Of_Passengers
+     FROM Passenger
+     GROUP BY country)
+WHERE Number_Of_Passengers = 
+    (SELECT MAX(COUNT(passengerNum))
+     FROM Passenger
+     GROUP BY country);
